@@ -3,11 +3,15 @@ const { mongoUrl } = require('./index');
 
 module.exports = {
   initializeDB: async () => {
-    await mongoose.connect(mongoUrl, {
-      useFindAndModify: false,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    try {
+      await mongoose.connect(mongoUrl, {
+        useFindAndModify: false,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+    } catch (error) {
+      process.exit(0);
+    }
   },
 
   cors: async (req, res, next) => {
