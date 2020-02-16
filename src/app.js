@@ -5,24 +5,32 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 
-const configuration = require('./config/init');
+
 const logger = require('./utils/logger');
+const middlwares = require('./utils/middlewares');
 const routes = require('./api/routes');
 const swaggerSpec = require('./utils/swagger');
 
 // models
 const AdministratorModel = require('./models/Administrator.model');
+const ImageModel = require('./models/Image.model');
 
 // services
 const AdministratorService = require('./services/administrator.service');
+const ImageService = require('./services/image.service');
+const ImageSharpService = require('./services/imageSharpThirdParty.service');
 
 module.exports = (config) => {
   const app = express();
 
-  app.use(helmet());
-  app.use(compression());
-
   const administrators = new AdministratorService(AdministratorModel);
+  const imageService = new ImageService(ImageModel);
+  const imagesSharpService = new ImageSharpService(
+    config.image.imageStorage,
+    config.baseUrl,
+    config.image.thumbnailSize,
+    config.image.defaultSize,
+  );
 
   const morganFormat = config.nodeEnv !== 'production' ? 'dev' : 'combined';
 
@@ -41,15 +49,16 @@ module.exports = (config) => {
     stream: process.stdout,
   }));
 
-
   // swagger
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use(helmet());
+  app.use(compression());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
-  app.use(configuration.cors);
+  app.use(middlwares.cors);
 
   // routes
-  app.use('/api', routes({ administrators }));
+  app.use('/api', routes({ administrators, imageService, imagesSharpService }));
 
 
   // error
