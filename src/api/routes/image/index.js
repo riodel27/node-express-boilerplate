@@ -8,13 +8,13 @@ const { CustomError } = require('../../../utils/error');
 const ImageController = require('../../controllers/image.controller');
 
 module.exports = (params) => {
-  const { imageService, imagesSharpService } = params;
+  const { imageService: ImageService } = params;
 
   router.post(
     '/',
     middlewares.upload.fields([{ name: 'images' }]),
-    middlewares.handleUploadImages(imagesSharpService),
-    ImageController.createImageEntities(imageService),
+    middlewares.handleUploadImages(ImageService),
+    ImageController.createImageEntities(ImageService),
   );
 
   router.get(
@@ -22,7 +22,7 @@ module.exports = (params) => {
     async (req, res, next) => {
       try {
         res.type('png');
-        const thumbnail = await imagesSharpService.default(req.params.filename);
+        const thumbnail = await ImageService.default(req.params.filename);
         return res.end(thumbnail, 'binary');
       } catch (error) {
         return next(new CustomError(error.code || 'ERROR_GET_IMAGE', error.status || 500, error.message));
@@ -36,7 +36,7 @@ module.exports = (params) => {
     (req, res, next) => {
       try {
         res.type('png');
-        return res.sendFile(imagesSharpService.filepath(req.params.filename));
+        return res.sendFile(ImageService.filepath(req.params.filename));
       } catch (error) {
         return next(new Error(error.message));
       }
@@ -49,7 +49,7 @@ module.exports = (params) => {
     async (req, res, next) => {
       try {
         res.type('png');
-        const thumbnail = await imagesSharpService.thumbnail(req.params.filename);
+        const thumbnail = await ImageService.thumbnail(req.params.filename);
         return res.end(thumbnail, 'binary');
       } catch (error) {
         return next(new CustomError(error.code || 'ERROR_GET_THUMBNAIL_IMAGE', error.status || 500, error.message));
@@ -60,7 +60,7 @@ module.exports = (params) => {
   router.delete(
     '/:filename',
     async (req, res) => {
-      await imagesSharpService.delete(req.params.filename);
+      await ImageService.delete(req.params.filename);
       return res.send(202);
     },
   );

@@ -18,18 +18,17 @@ const ImageModel = require('./models/Image.model');
 // services
 const AdministratorService = require('./services/administrator.service');
 const ImageService = require('./services/image.service');
-const ImageSharpService = require('./services/imageSharpThirdParty.service');
 
 module.exports = (config) => {
   const app = express();
 
   const administrators = new AdministratorService(AdministratorModel);
-  const imageService = new ImageService(ImageModel);
-  const imagesSharpService = new ImageSharpService(
+  const imageService = new ImageService(
     config.image.imageStorage,
     config.baseUrl,
     config.image.thumbnailSize,
     config.image.defaultSize,
+    ImageModel,
   );
 
   const morganFormat = config.nodeEnv !== 'production' ? 'dev' : 'combined';
@@ -58,7 +57,7 @@ module.exports = (config) => {
   app.use(middlwares.cors);
 
   // routes
-  app.use('/api', routes({ administrators, imageService, imagesSharpService }));
+  app.use('/api', routes({ administrators, imageService }));
 
 
   // error

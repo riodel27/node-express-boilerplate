@@ -17,5 +17,6 @@ module.exports = (params) => {
     '/',
     AdministratorController.GetAdministrators(AdministratorService),
   );
+
   return router;
 };

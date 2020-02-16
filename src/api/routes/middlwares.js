@@ -5,8 +5,8 @@ const upload = multer();
 
 module.exports.upload = upload;
 
-module.exports.handleUploadImages = (ImagesSharpService) => async (req, res, next) => {
+module.exports.handleUploadImages = (ImageService) => async (req, res, next) => {
   if (not(req.files)) return next();
-  req.files.writeImages = await ImagesSharpService.storeImages(req.files.images);
+  req.files.writeImages = await ImageService.storeImages(req.files.images);
   return next();
 };
