@@ -1,10 +1,8 @@
 /* eslint-disable consistent-return */
 
-/** http layer service(orchestrator or business logic servies) */
 const { body, validationResult } = require('express-validator');
 
 const { UserInputError } = require('../../utils/error');
-const AdministratorService = require('../../services/administrator.service');
 
 module.exports = {
   validate: (method) => {
@@ -22,11 +20,12 @@ module.exports = {
         break;
     }
   },
-  createAdministrator: async (req, res, next) => {
+  createAdministrator: (AdministratorService) => async (req, res, next) => {
     try {
       const { name, email, password } = req.body;
 
       const errors = validationResult(req);
+
 
       if (!errors.isEmpty()) {
         return next(new UserInputError(422, JSON.stringify(errors.array())));
@@ -38,12 +37,16 @@ module.exports = {
         password,
       });
 
-      // might call another Service base on administrator response.
+      return res.status(201).json(administrator);
+    } catch (error) {
+      return next(new Error(error.message));
+    }
+  },
+  GetAdministrators: (AdministratorService) => async (req, res, next) => {
+    try {
+      const administrators = await AdministratorService.getList();
 
-      return res.status(201).json({
-        message: 'Created successfully',
-        administrator,
-      });
+      return res.status(201).json(administrators);
     } catch (error) {
       return next(new Error(error.message));
     }

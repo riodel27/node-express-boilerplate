@@ -1,11 +1,17 @@
-// business logic service layer
-const AdministratorDb = require('../db/administrator.db');
+class AdministratorService {
+  constructor(administrator) {
+    this.administrator = administrator;
+  }
 
-const createAdministrator = async (data) => {
-  const administrator = await AdministratorDb.create(data);
-  return administrator;
-};
+  async createAdministrator(data) {
+    const administrator = await this.administrator.create(data);
+    return administrator;
+  }
 
-module.exports = {
-  createAdministrator,
-};
+  async getList() {
+    const administrators = await this.administrator.find();
+    return administrators;
+  }
+}
+
+module.exports = AdministratorService;

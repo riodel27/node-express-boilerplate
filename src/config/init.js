@@ -1,19 +1,4 @@
-const mongoose = require('mongoose');
-const { mongoUrl } = require('./index');
-
 module.exports = {
-  initializeDB: async () => {
-    try {
-      await mongoose.connect(mongoUrl, {
-        useFindAndModify: false,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
-    } catch (error) {
-      process.exit(0);
-    }
-  },
-
   cors: async (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header(

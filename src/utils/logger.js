@@ -1,24 +1,25 @@
+require('dotenv').config();
 
 const { createLogger, format, transports } = require('winston');
 
-const { logLevel, nodeEnv } = require('../config');
+const config = require('../config')[process.env.NODE_ENV || 'development'];
 
 
 // https://github.com/winstonjs/winston#logging
 // { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
-const level = logLevel || 'debug';
+const level = config.logLevel || 'debug';
 
 function formatParams(info) {
   const {
     // eslint-disable-next-line no-shadow
     timestamp,
-    level,
+    level: Level,
     message,
     ...args
   } = info;
   const ts = timestamp.slice(0, 19).replace('T', ' ');
 
-  return `${ts} ${level}: ${message} ${Object.keys(args).length
+  return `${ts} ${Level}: ${message} ${Object.keys(args).length
     ? JSON.stringify(args, '', '')
     : ''}`;
 }
@@ -39,7 +40,7 @@ const productionFormat = format.combine(
 
 let logger;
 
-if (nodeEnv !== 'production') {
+if (config.nodeEnv !== 'production') {
   logger = createLogger({
     level,
     format: developmentFormat,
@@ -61,7 +62,7 @@ if (nodeEnv !== 'production') {
   });
 
   logger.stream = {
-    write(message, encoding) {
+    write(message) {
       logger.info(message);
     },
   };

@@ -7,11 +7,11 @@ const {
 } = require('../../package.json');
 
 const api = {
-  '/user': {
+  '/api/administrator': {
     post: {
       tags: ['api'],
-      operationId: 'RegisterUser',
-      summary: 'register user',
+      operationId: 'RegisterAdministrator',
+      summary: 'register administrator',
       parameters: [],
       requestBody: {
         content: {
