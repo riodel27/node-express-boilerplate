@@ -33,9 +33,9 @@ class ImageService {
       await sharp(image.buffer)
         .toFile(filepath);
       return {
-        url: `${this.baseurl}/image/${filename}`,
-        originalUrl: `${this.baseurl}/image/original/${filename}`,
-        thumbnailUrl: `${this.baseurl}/image/thumbnail/${filename}`,
+        url: `${this.baseurl}/api/image/${filename}`,
+        originalUrl: `${this.baseurl}/api/image/original/${filename}`,
+        thumbnailUrl: `${this.baseurl}/api/image/thumbnail/${filename}`,
       };
     }));
 
