@@ -5,7 +5,7 @@ module.exports = {
     port: 3000,
     logLevel: 'debug',
     nodeEnv: 'development',
-    baseUrl: 'http://localhost:3000/api',
+    baseUrl: 'http://localhost:3000',
     database: {
       url: 'mongodb://localhost:27017/yourdbname',
     },
