@@ -1,6 +1,13 @@
 module.exports = {
-	"extends": "airbnb-base",
-	"rules": {
-		"linebreak-style": ["error", "windows"] // switch to unix when running in linux. default is unix.
-	}
+   extends: ['airbnb-base', 'prettier'],
+   plugins: ['prettier'],
+   rules: {
+      'prettier/prettier': 'error',
+      'no-unused-vars': 'warn',
+      'no-console': 'off',
+      'func-names': 'off',
+      'no-process-exit': 'off',
+      'object-shorthand': 'off',
+      'class-methods-use-this': 'off',
+   },
 }
